@@ -16,8 +16,8 @@ const CategoryView = () => {
   const { tasks, loading, error, createTask, updateTask, deleteTask, refetch } = useTasks()
   const { categories } = useCategories()
   
-  const category = categories.find(c => c.Id === parseInt(categoryId))
-  const categoryTasks = tasks.filter(task => task.categoryId === parseInt(categoryId))
+const category = (categories || []).find(c => c.Id === parseInt(categoryId))
+  const categoryTasks = (tasks || []).filter(task => task.categoryId === parseInt(categoryId))
   const sortedTasks = sortTasksByPriority(categoryTasks)
   const taskStats = getTaskStats(categoryTasks)
   

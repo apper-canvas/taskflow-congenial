@@ -9,11 +9,11 @@ import { formatDateForInput } from "@/utils/dateUtils"
 import { useCategories } from "@/hooks/useCategories"
 
 const TaskEditModal = ({ task, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
-    title: task.title,
+const [formData, setFormData] = useState({
+    title: task.title || "",
     description: task.description || "",
-    categoryId: task.categoryId.toString(),
-    priority: task.priority,
+    categoryId: task.categoryId?.toString() || "1",
+    priority: task.priority || "medium",
     dueDate: task.dueDate ? formatDateForInput(task.dueDate) : ""
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -35,10 +35,10 @@ const TaskEditModal = ({ task, onSave, onCancel }) => {
     setIsSubmitting(true)
     
     const updatedTask = {
-      ...task,
+...task,
       title: formData.title.trim(),
       description: formData.description.trim(),
-      categoryId: parseInt(formData.categoryId),
+      categoryId: parseInt(formData.categoryId) || 1,
       priority: formData.priority,
       dueDate: formData.dueDate || null
     }
@@ -97,13 +97,13 @@ const TaskEditModal = ({ task, onSave, onCancel }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Select
                 label="Category"
-                value={formData.categoryId}
+value={formData.categoryId}
                 onChange={(e) => handleChange("categoryId", e.target.value)}
                 required
               >
                 <option value="">Select category</option>
                 {categories.map((category) => (
-                  <option key={category.Id} value={category.Id}>
+                  <option key={category.Id} value={category.Id.toString()}>
                     {category.name}
                   </option>
                 ))}

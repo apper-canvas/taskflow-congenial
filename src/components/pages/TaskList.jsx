@@ -22,7 +22,7 @@ const TaskList = () => {
   })
   
   // Filter and sort tasks
-  const filteredTasks = tasks.filter(task => {
+const filteredTasks = (tasks || []).filter(task => {
     if (filters.priority !== "all" && task.priority !== filters.priority) {
       return false
     }
@@ -38,7 +38,6 @@ const TaskList = () => {
     if (filters.status === "overdue" && (task.completed || getDueDateStatus(task.dueDate) !== "overdue")) {
       return false
     }
-    
     return true
   })
   
@@ -49,7 +48,7 @@ const TaskList = () => {
   const filteredStats = getTaskStats(filteredTasks)
   
   const handleClearCompleted = async () => {
-    const completedTasks = tasks.filter(task => task.completed)
+const completedTasks = (tasks || []).filter(task => task.completed)
     
     if (completedTasks.length === 0) {
       toast.info("No completed tasks to clear")
@@ -78,7 +77,7 @@ const TaskList = () => {
             All Tasks
           </h1>
           <p className="text-surface-600">
-            {tasks.length === 0 
+{(tasks || []).length === 0 
               ? "Start organizing your day by adding your first task"
               : `You have ${taskStats.pending} pending tasks out of ${taskStats.total} total`
             }
@@ -100,10 +99,10 @@ const TaskList = () => {
               ...filteredStats,
               filtered: filteredTasks.length,
               byPriority: {
-                urgent: tasks.filter(t => t.priority === "urgent" && !t.completed).length,
-                high: tasks.filter(t => t.priority === "high" && !t.completed).length,
-                medium: tasks.filter(t => t.priority === "medium" && !t.completed).length,
-                low: tasks.filter(t => t.priority === "low" && !t.completed).length
+urgent: (tasks || []).filter(t => t.priority === "urgent" && !t.completed).length,
+                high: (tasks || []).filter(t => t.priority === "high" && !t.completed).length,
+                medium: (tasks || []).filter(t => t.priority === "medium" && !t.completed).length,
+                low: (tasks || []).filter(t => t.priority === "low" && !t.completed).length
               }
             }}
             onClearCompleted={handleClearCompleted}
@@ -124,7 +123,7 @@ const TaskList = () => {
           <div className="space-y-4">
             <AnimatePresence mode="popLayout">
               {sortedTasks.map((task) => {
-                const category = categories.find(c => c.Id === task.categoryId)
+const category = (categories || []).find(c => c.Id === task.categoryId)
                 
                 return (
                   <TaskCard

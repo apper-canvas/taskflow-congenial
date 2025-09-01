@@ -17,7 +17,7 @@ const CompletedTasks = () => {
   const { categories } = useCategories()
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   
-  const completedTasks = tasks.filter(task => task.completed)
+const completedTasks = (tasks || []).filter(task => task.completed)
   const sortedTasks = sortTasksByPriority(completedTasks)
   
   const handleClearAll = async () => {
@@ -151,8 +151,7 @@ const CompletedTasks = () => {
             {/* Task List */}
             <AnimatePresence mode="popLayout">
               {sortedTasks.map((task) => {
-                const category = categories.find(c => c.Id === task.categoryId)
-                
+const category = (categories || []).find(c => c.Id === task.categoryId)
                 return (
                   <motion.div
                     key={task.Id}

@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import ApperIcon from "@/components/ApperIcon"
-import Button from "@/components/atoms/Button"
-import SearchBar from "@/components/molecules/SearchBar"
-import CategorySidebar from "@/components/molecules/CategorySidebar"
-import { useCategories } from "@/hooks/useCategories"
-import { useTasks } from "@/hooks/useTasks"
-import { cn } from "@/utils/cn"
+import React, { useContext, useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useCategories } from "@/hooks/useCategories";
+import { useTasks } from "@/hooks/useTasks";
+import { AuthContext } from "../../App";
+import { cn } from "@/utils/cn";
+import ApperIcon from "@/components/ApperIcon";
+import CategorySidebar from "@/components/molecules/CategorySidebar";
+import SearchBar from "@/components/molecules/SearchBar";
+import Button from "@/components/atoms/Button";
 
 const Layout = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { categories } = useCategories()
+const { categories } = useCategories()
   const { tasks } = useTasks()
+  const { logout } = useContext(AuthContext)
   
   // Calculate task counts
   const taskCounts = categories.reduce((acc, category) => {
@@ -23,7 +25,6 @@ const Layout = ({ children }) => {
   
   const totalTasks = tasks.length
   const completedTasks = tasks.filter(task => task.completed).length
-  
   // Close mobile menu when route changes
   useEffect(() => {
     setMobileMenuOpen(false)
@@ -33,12 +34,23 @@ const Layout = ({ children }) => {
     <div className="h-screen flex overflow-hidden bg-white">
       {/* Desktop Sidebar */}
       <div className="hidden lg:flex lg:flex-shrink-0">
-        <CategorySidebar 
+<CategorySidebar 
           categories={categories}
           taskCounts={taskCounts}
           totalTasks={totalTasks}
           completedTasks={completedTasks}
         />
+        <div className="mt-auto p-4 border-t border-surface-200">
+          <Button 
+            onClick={logout}
+            variant="outline"
+            size="sm"
+            icon="LogOut"
+            className="w-full"
+          >
+            Logout
+          </Button>
+        </div>
       </div>
       
       {/* Mobile Sidebar Overlay */}
@@ -62,12 +74,23 @@ const Layout = ({ children }) => {
               transition={{ type: "tween", duration: 0.3 }}
               className="lg:hidden fixed inset-y-0 left-0 z-50 w-64"
             >
-              <CategorySidebar 
+<CategorySidebar 
                 categories={categories}
                 taskCounts={taskCounts}
                 totalTasks={totalTasks}
                 completedTasks={completedTasks}
               />
+              <div className="mt-auto p-4 border-t border-surface-200">
+                <Button 
+                  onClick={logout}
+                  variant="outline"
+                  size="sm"
+                  icon="LogOut"
+                  className="w-full"
+                >
+                  Logout
+                </Button>
+              </div>
             </motion.div>
           </>
         )}

@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react"
-import * as taskService from "@/services/api/taskService"
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import * as taskService from "@/services/api/taskService";
+import Error from "@/components/ui/Error";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   
-  const loadTasks = async () => {
+const loadTasks = async () => {
     try {
       setLoading(true)
       setError(null)
       const data = await taskService.getTasks()
-      setTasks(data)
+      setTasks(data || [])
     } catch (err) {
       setError(err.message)
     } finally {
@@ -19,9 +21,10 @@ export const useTasks = () => {
     }
   }
   
-  const createTask = async (taskData) => {
+const createTask = async (taskData) => {
     try {
       const newTask = await taskService.createTask(taskData)
+      toast.success("Task created successfully!")
       setTasks(prev => [...prev, newTask])
       return newTask
     } catch (err) {
@@ -29,14 +32,13 @@ export const useTasks = () => {
     }
   }
   
-  const updateTask = async (taskId, updates) => {
+const updateTask = async (taskId, updates) => {
     try {
       // Handle toggle completion
       if (typeof updates === "boolean") {
         const task = tasks.find(t => t.Id === taskId)
         if (task) {
           const updatedTask = await taskService.updateTask(taskId, {
-            ...task,
             completed: updates,
             completedAt: updates ? new Date().toISOString() : null
           })
@@ -45,16 +47,18 @@ export const useTasks = () => {
       } else {
         const updatedTask = await taskService.updateTask(taskId, updates)
         setTasks(prev => prev.map(t => t.Id === taskId ? updatedTask : t))
+        toast.success("Task updated successfully!")
       }
     } catch (err) {
       throw new Error("Failed to update task")
     }
   }
   
-  const deleteTask = async (taskId) => {
+const deleteTask = async (taskId) => {
     try {
       await taskService.deleteTask(taskId)
       setTasks(prev => prev.filter(t => t.Id !== taskId))
+      toast.success("Task deleted successfully!")
     } catch (err) {
       throw new Error("Failed to delete task")
     }
