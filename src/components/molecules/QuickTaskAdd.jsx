@@ -93,8 +93,9 @@ const QuickTaskAdd = ({ onAddTask, categories, selectedCategoryId }) => {
   return (
     <div className="bg-white border border-surface-200 rounded-xl p-4 shadow-sm">
       {!isExpanded ? (
-        <button
+<button
           onClick={handleExpand}
+          data-testid="quick-add-button"
           className="w-full flex items-center gap-3 text-left text-surface-500 hover:text-surface-700 transition-colors"
         >
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
